@@ -1,0 +1,30 @@
+.menu .app-brand.demo {
+    height: 64px;
+    margin-top: 12px;
+}
+
+.app-brand-logo.demo svg {
+    width: 22px;
+    height: 38px;
+}
+
+.app-brand-text.demo {
+    font-size: 1.25rem;
+    letter-spacing: -0.5px;
+    text-transform: capitalize;
+}
+
+@media (min-width: 1200px) {
+    .layout-menu-fixed.layout-menu-collapsed
+        .layout-content-navbar
+        .layout-menu {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+        transform: translate3d(-100%, 0, 0) !important;
+        will-change: transform, -webkit-transform;
+    }
+}
