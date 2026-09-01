@@ -10,5 +10,6 @@ class IndexKegiatan extends Model
     // use HasFactory;
 
     protected $table = 'index_kegiatan';
+
     public $guarded = ['id'];
 }

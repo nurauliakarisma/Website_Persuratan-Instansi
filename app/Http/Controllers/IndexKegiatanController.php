@@ -14,7 +14,7 @@ class IndexKegiatanController extends Controller
     {
         $title = 'Index Kegiatan';
 
-        $indexes = IndexKegiatan::latest()->get();
+        $indexes = IndexKegiatan::orderBy('kode', 'asc')->get();
 
         return view('master.index_kegiatan', compact('title', 'indexes'));
     }

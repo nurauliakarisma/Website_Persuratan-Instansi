@@ -1,5 +1,5 @@
 @php
-    $role = request()->user()->tipe ?? '';
+    $role = auth()->user()->tipe ?? request()->user()->tipe ?? '';
 @endphp
 @extends('layouts.admin')
 
@@ -17,79 +17,132 @@
     @endif
 
     <button type="button" data-bs-toggle="modal" data-bs-target="#addMediaModal"
-        class="btn btn-warning btn-lg col-12">&plus; Tambah Media</button>
+        class="btn btn-warning w-100 shadow-sm py-2 px-3 fw-semibold d-flex align-items-center justify-content-center gap-2" style="border-radius: 10px;">
+        <i class="bx bx-plus-circle fs-5"></i> Tambah Media Baru
+    </button>
 
-    <div class="card mt-4">
-        <div class="card-header">
-            <div class="d-flex align-items-center justify-content-between">
-                <h6 class="card-title">Data Media</h6>
-                <div class="d-flex gap-2">
-                    <a href="{{ route('media.show', ['prev_url' => url()->current()]) }}"
-                        class="btn btn-sm btn-primary">Lihat Pengajuan</a>
-                    <a href="{{ route('media.export') }}" target="_blank" class="btn btn-sm btn-success">Export to Excel</a>
-                </div>
+    <div class="card mt-3 shadow-sm border-0" style="border-radius: 12px;">
+        <div class="card-header border-bottom py-3 px-3 px-sm-4 d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <h6 class="card-title mb-0 fw-bold d-flex align-items-center gap-2">
+                <i class="bx bx-broadcast text-primary fs-5"></i> Data Media
+            </h6>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <a href="{{ route('media.show', ['prev_url' => url()->current()]) }}"
+                    class="btn btn-sm btn-primary d-flex align-items-center gap-1">
+                    <i class="bx bx-show"></i> Lihat Pengajuan
+                </a>
+                <a href="{{ route('media.export') }}" target="_blank"
+                    class="btn btn-sm btn-success d-flex align-items-center gap-1">
+                    <i class="bx bx-spreadsheet"></i> Export Excel
+                </a>
             </div>
         </div>
-        <div class="card-body">
-            <div class="table-responsive text-nowrap">
-                <table class="table table-striped">
-                    <thead>
+        <div class="card-body p-2 p-sm-4">
+            <!-- Desktop Table View -->
+            <div class="d-none d-md-block table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
                         <tr>
-                            <th>Nama</th>
-                            <th>Harga Penawaran</th>
-                            <th>Harga Deal</th>
-                            <th>Harga + PPN</th>
+                            <th style="min-width: 260px;">Nama Perusahaan Media</th>
+                            <th style="min-width: 170px;">Harga Penawaran</th>
+                            <th style="min-width: 170px;">Harga Deal (Nett)</th>
+                            <th style="min-width: 190px;">Total Kontrak (+ PPN 11%)</th>
                             @if (in_array($role, ['Super Admin', 'Admin A']))
-                                <th>Action</th>
+                                <th class="text-center" style="min-width: 140px;">Aksi</th>
                             @endif
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($medias as $media)
                             <tr>
-                                <td>{{ $media->nama }}</td>
-                                <td>Rp{{ number_format($media->harga_penawaran, 2, ',', '.') }}</td>
-                                <td>Rp{{ number_format($media->harga_deal, 2, ',', '.') }}</td>
-                                <td>Rp{{ number_format($media->harga_total, 2, ',', '.') }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="avatar avatar-sm flex-shrink-0">
+                                            <span class="avatar-initial rounded-circle bg-label-primary">
+                                                <i class="bx bx-news"></i>
+                                            </span>
+                                        </div>
+                                        <span class="fw-bold text-dark" style="font-size: 0.88rem;">
+                                            {{ $media->nama }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td><span class="text-muted fw-semibold">Rp{{ number_format($media->harga_penawaran, 0, ',', '.') }}</span></td>
+                                <td><span class="fw-bold text-dark">Rp{{ number_format($media->harga_deal, 0, ',', '.') }}</span></td>
+                                <td>
+                                    <span class="badge bg-label-primary fs-6 fw-bold px-2 py-1">
+                                        Rp{{ number_format($media->harga_total, 0, ',', '.') }}
+                                    </span>
+                                </td>
                                 @if (in_array($role, ['Super Admin', 'Admin A']))
-                                    <td>
-                                        <div class="dropdown">
-                                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                                data-bs-toggle="dropdown">
-                                                <i class="bx bx-dots-vertical-rounded"></i>
-                                            </button>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#editStaffModal-{{ $media->id }}"
-                                                    data-bs-toggle="modal" role="button"><i
-                                                        class="bx bx-edit-alt me-1"></i>
-                                                    Edit</a>
-                                                <form action="{{ route('media.destroy', $media->id) }}" method="POST">
-                                                    @method('delete')
-                                                    @csrf
-                                                    <button type="submit" class="dropdown-item text-danger">
-                                                        <i class="bx bx-trash me-1"></i>
-                                                        Delete
-                                                    </button>
-                                                </form>
-                                            </div>
+                                    <td class="text-center">
+                                        <div class="d-flex align-items-center justify-content-center gap-1">
+                                            <a class="btn btn-xs btn-outline-warning px-2 py-1" href="#editStaffModal-{{ $media->id }}"
+                                                data-bs-toggle="modal" role="button" title="Edit Data Media">
+                                                <i class="bx bx-edit-alt me-1"></i>Edit
+                                            </a>
+                                            <form action="{{ route('media.destroy', $media->id) }}" method="POST" class="d-inline form-confirm-delete"
+                                                data-confirm-title="Konfirmasi Hapus Media"
+                                                data-confirm-text="Apakah Anda yakin ingin menghapus media <strong>{{ $media->nama }}</strong>?">
+                                                @method('delete')
+                                                @csrf
+                                                <button type="submit" class="btn btn-xs btn-outline-danger px-2 py-1" title="Hapus Media">
+                                                    <i class="bx bx-trash me-1"></i>Hapus
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 @endif
                             </tr>
                         @endforeach
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <th>Nama</th>
-                            <th>Harga Penawaran</th>
-                            <th>Harga Deal</th>
-                            <th>Harga + PPN</th>
-                            @if (in_array($role, ['Super Admin', 'Admin A']))
-                                <th>Action</th>
-                            @endif
-                        </tr>
-                    </tfoot>
                 </table>
+            </div>
+
+            <!-- Mobile Card List View -->
+            <div class="d-md-none mobile-data-list">
+                @forelse ($medias as $media)
+                    <div class="p-3 mb-2 bg-white rounded-3 border shadow-xs card-item-media">
+                        <div class="d-flex align-items-start justify-content-between mb-2 gap-2">
+                            <div class="fw-bold text-dark fs-6">{{ $media->nama }}</div>
+                            <span class="badge bg-label-primary px-2 py-1 flex-shrink-0">
+                                Total: Rp{{ number_format($media->harga_total, 0, ',', '.') }}
+                            </span>
+                        </div>
+                        <div class="p-2 bg-lighter rounded mb-2" style="font-size: 0.76rem;">
+                            <div class="d-flex justify-content-between text-muted mb-1">
+                                <span>Penawaran:</span>
+                                <strong>Rp{{ number_format($media->harga_penawaran, 0, ',', '.') }}</strong>
+                            </div>
+                            <div class="d-flex justify-content-between text-muted">
+                                <span>Harga Deal:</span>
+                                <strong class="text-success">Rp{{ number_format($media->harga_deal, 0, ',', '.') }}</strong>
+                            </div>
+                        </div>
+                        @if (in_array($role, ['Super Admin', 'Admin A']))
+                            <div class="d-flex align-items-center justify-content-end gap-2 pt-2 border-top">
+                                <a class="btn btn-xs btn-outline-warning px-3 py-1 fw-medium d-flex align-items-center"
+                                    href="#editStaffModal-{{ $media->id }}" data-bs-toggle="modal" role="button">
+                                    <i class="bx bx-edit-alt me-1"></i>Edit
+                                </a>
+                                <form action="{{ route('media.destroy', $media->id) }}" method="POST" class="d-inline form-confirm-delete"
+                                    data-confirm-title="Konfirmasi Hapus Media"
+                                    data-confirm-text="Apakah Anda yakin ingin menghapus media <strong>{{ $media->nama }}</strong>?">
+                                    @method('delete')
+                                    @csrf
+                                    <button type="submit" class="btn btn-xs btn-outline-danger px-3 py-1 fw-medium d-flex align-items-center">
+                                        <i class="bx bx-trash me-1"></i>Hapus
+                                    </button>
+                                </form>
+                            </div>
+                        @endif
+                    </div>
+                @empty
+                    <div class="text-center py-4 text-muted">
+                        <i class="bx bx-info-circle fs-3 d-block mb-1"></i>
+                        Belum ada data media.
+                    </div>
+                @endforelse
             </div>
         </div>
     </div>
@@ -98,7 +151,8 @@
     {{-- Tambah Media --}}
     <div class="modal fade" id="addMediaModal" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
-            <form action="{{ route('media.store') }}" method="POST" class="modal-content needs-validation" novalidate>
+            <form action="{{ route('media.store') }}" method="POST" class="modal-content needs-validation form-confirm"
+                novalidate data-confirm-title="Konfirmasi Tambah Media" data-confirm-text="Apakah Anda yakin ingin menambahkan data mitra media baru ini?" data-confirm-btn="<i class='bx bx-plus-circle me-1'></i>Ya, Simpan">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalCenterTitle">Form Media</h5>
@@ -130,7 +184,7 @@
                         </div>
                     </div>
                     <div class="row mb-4">
-                        <label class="col-sm-2 col-form-label" for="status">Keterangan</label>
+                        <label class="col-sm-2 col-form-label" for="status">Status</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="status" name="status" />
                         </div>
@@ -153,7 +207,10 @@
                 aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <form action="{{ route('media.update', $media->id) }}" method="POST"
-                        class="modal-content needs-validation" novalidate>
+                        class="modal-content needs-validation form-confirm" novalidate
+                        data-confirm-title="Konfirmasi Simpan Perubahan"
+                        data-confirm-text="Apakah Anda yakin ingin menyimpan perubahan data media <strong>{{ $media->nama }}</strong>?"
+                        data-confirm-btn="<i class='bx bx-save me-1'></i>Ya, Simpan Perubahan">
                         @method('put')
                         @csrf
                         <div class="modal-header">

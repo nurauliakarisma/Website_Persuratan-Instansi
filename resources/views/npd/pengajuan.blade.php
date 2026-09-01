@@ -18,9 +18,10 @@
             <div class="card-body">
                 <div class="row mb-4">
                     <label class="col-sm-2 col-form-label" for="tanggal_pengajuan">Tanggal</label>
-                    <div class="col-sm-4 col-md-2">
-                        <input type="date" class="form-control @error('tanggal_pengajuan') is-invalid @enderror"
-                            id="tanggal_pengajuan" name="tanggal_pengajuan" value="{{ date('Y-m-d') }}" readonly />
+                    <div class="col-sm-4 col-md-3">
+                        <input type="text" class="form-control"
+                            value="{{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}" readonly />
+                        <input type="hidden" name="tanggal_pengajuan" value="{{ date('Y-m-d') }}" />
                     </div>
                 </div>
                 <div class="row mb-3">

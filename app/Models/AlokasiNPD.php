@@ -12,10 +12,12 @@ class AlokasiNPD extends Model
     // use HasFactory;
 
     protected $table = 'alokasi_npd';
+
     public $guarded = ['id'];
+
     public $with = [
         'subKegiatan:id,kode_program,ket_program,kode_kegiatan,ket_kegiatan,kode_subkegiatan,ket_subkegiatan',
-        'rincianBelanja:id,kode_rekening,keterangan'
+        'rincianBelanja:id,kode_rekening,keterangan',
     ];
 
     public function subKegiatan(): BelongsTo

@@ -11,7 +11,9 @@ class PengajuanPublikasi extends Model
     // use HasFactory;
 
     protected $table = 'pengajuan_publikasi';
+
     public $guarded = ['id'];
+
     public $with = ['media'];
 
     public function media(): BelongsTo

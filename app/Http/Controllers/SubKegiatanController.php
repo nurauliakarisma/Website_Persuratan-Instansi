@@ -14,7 +14,10 @@ class SubKegiatanController extends Controller
     {
         $title = 'Sub Kegiatan';
 
-        $subs = SubKegiatan::latest()->get();
+        $subs = SubKegiatan::orderBy('kode_program', 'asc')
+            ->orderBy('kode_kegiatan', 'asc')
+            ->orderBy('kode_subkegiatan', 'asc')
+            ->get();
 
         return view('master.subkegiatan', compact('title', 'subs'));
     }
@@ -44,7 +47,7 @@ class SubKegiatanController extends Controller
         try {
             SubKegiatan::create($validatedData);
 
-            return redirect()->route('master.sub-kegiatan.index')->with('success', "Berhasil menambahkan data sub kegiatan.");
+            return redirect()->route('master.sub-kegiatan.index')->with('success', 'Berhasil menambahkan data sub kegiatan.');
         } catch (\Throwable $err) {
             return back()->with('error', $this->errorMessage($err->getCode()));
         }
@@ -82,11 +85,11 @@ class SubKegiatanController extends Controller
                 [
                     'ket_program' => $validatedData['ket_program'],
                     'ket_kegiatan' => $validatedData['ket_kegiatan'],
-                    'ket_subkegiatan' => $validatedData['ket_subkegiatan']
+                    'ket_subkegiatan' => $validatedData['ket_subkegiatan'],
                 ]
             );
 
-            return redirect()->route('master.sub-kegiatan.index')->with('success', "Berhasil mengubah data sub kegiatan.");
+            return redirect()->route('master.sub-kegiatan.index')->with('success', 'Berhasil mengubah data sub kegiatan.');
         } catch (\Throwable $err) {
             return back()->with('error', $this->errorMessage($err->getCode()));
         }

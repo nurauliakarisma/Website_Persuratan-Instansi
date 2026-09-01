@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Exports\MediaExport;
 use App\Exports\NODINExport;
 use App\Exports\NPDExport;
-use App\Models\PengajuanNODIN;
-use App\Models\PengajuanNPD;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -16,6 +14,7 @@ class ExportController extends Controller
     {
         $timestamp = date('YmdHis');
         $filename = "nodin-$bagian-$timestamp.xlsx";
+
         return Excel::download(new NODINExport($bagian), $filename, \Maatwebsite\Excel\Excel::XLSX);
     }
 
@@ -23,6 +22,7 @@ class ExportController extends Controller
     {
         $timestamp = date('YmdHis');
         $filename = "npd-$bagian-$timestamp.xlsx";
+
         return Excel::download(new NPDExport($bagian), $filename, \Maatwebsite\Excel\Excel::XLSX);
     }
 
@@ -30,6 +30,7 @@ class ExportController extends Controller
     {
         $timestamp = date('YmdHis');
         $filename = "media-$timestamp.xlsx";
+
         return (new MediaExport)->download($filename, \Maatwebsite\Excel\Excel::XLSX);
     }
 }

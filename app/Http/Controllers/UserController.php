@@ -33,6 +33,7 @@ class UserController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
+
         return redirect()->route('login');
     }
 
@@ -50,75 +51,92 @@ class UserController extends Controller
     public function storeAdmin(Request $request)
     {
         $validatedData = $request->validate([
-            'nama' => 'required',
+            'nama' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8',
+            'password' => 'required|min:6',
             'tipe' => 'required|in:Super Admin,Admin A,Admin B',
-            'photo' => 'nullable|image|mimes:png,jpg,jpeg|exclude',
+            'nip' => 'nullable|string|unique:users,nip',
+            'jabatan' => 'nullable|string|max:255',
+            'photo' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
         ], [
             'nama.required' => 'Nama harus diisi.',
             'email.required' => 'Email harus diisi.',
             'email.email' => 'Masukkan email yang valid.',
             'email.unique' => 'Email yang dimasukkan sudah terdaftar.',
             'password.required' => 'Password harus diisi.',
-            'password.min' => 'Password minimal 8 character.',
-            'tipe.required' => 'Tipe harus dipilih.',
-            'tipe.in' => 'Tipe harus bernilai :value.',
-            'photo.image' => 'Photo harus berupa image file.',
-            'photo.mimes' => 'Photo harus berekstensi file :value',
+            'password.min' => 'Password minimal 6 karakter.',
+            'tipe.required' => 'Tipe / role admin harus dipilih.',
+            'tipe.in' => 'Tipe admin tidak valid.',
+            'nip.unique' => 'NIP sudah terdaftar untuk pengguna lain.',
+            'photo.image' => 'Photo harus berupa file gambar.',
+            'photo.mimes' => 'Photo harus berformat PNG, JPG, atau JPEG.',
+            'photo.max' => 'Ukuran photo maksimal 2MB.',
         ]);
 
         try {
             if ($request->hasFile('photo')) {
-                $validatedData['photo'] = $request->file('photo')->store('photo-profile');
+                $validatedData['photo'] = $request->file('photo')->store('photo-profile', 'public');
             }
 
             $validatedData['password'] = Hash::make($validatedData['password']);
-
             User::create($validatedData);
 
             return redirect()->back()->with('success', 'Berhasil menambahkan admin baru.');
         } catch (\Throwable $err) {
-            if ($validatedData['photo'] != '') Storage::delete($validatedData['photo']);
-            return back()->withInput()->with('error', $err->getMessage());
+            if (! empty($validatedData['photo'])) {
+                Storage::disk('public')->delete($validatedData['photo']);
+            }
+
+            return back()->withInput()->with('error', 'Gagal menambahkan admin: '.$err->getMessage());
         }
     }
 
     public function updateAdmin(Request $request, User $user)
     {
         $validatedData = $request->validate([
-            'nama' => 'required',
-            'email' => 'required|email',
-            'new_password' => 'nullable|min:8||exclude',
+            'nama' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,'.$user->id,
+            'new_password' => 'nullable|min:6',
             'tipe' => 'required|in:Super Admin,Admin A,Admin B',
-            'photo' => 'nullable|image|mimes:png,jpg,jpeg|exclude',
+            'nip' => 'nullable|string|unique:users,nip,'.$user->id,
+            'jabatan' => 'nullable|string|max:255',
+            'photo' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
         ], [
             'nama.required' => 'Nama harus diisi.',
             'email.required' => 'Email harus diisi.',
             'email.email' => 'Masukkan email yang valid.',
-            'new_password.min' => 'Password minimal 8 character.',
-            'tipe.required' => 'Tipe harus dipilih.',
-            'tipe.in' => 'Tipe harus bernilai :value.',
-            'photo.image' => 'Photo harus berupa image file.',
-            'photo.mimes' => 'Photo harus berekstensi file :value',
+            'email.unique' => 'Email sudah terdaftar untuk pengguna lain.',
+            'new_password.min' => 'Password minimal 6 karakter.',
+            'tipe.required' => 'Tipe / role admin harus dipilih.',
+            'tipe.in' => 'Tipe admin tidak valid.',
+            'nip.unique' => 'NIP sudah terdaftar untuk pengguna lain.',
+            'photo.image' => 'Photo harus berupa file gambar.',
+            'photo.mimes' => 'Photo harus berformat PNG, JPG, atau JPEG.',
+            'photo.max' => 'Ukuran photo maksimal 2MB.',
         ]);
 
         try {
             if ($request->hasFile('photo')) {
-                $validatedData['photo'] = $request->file('photo')->store('photo-profile');
-                // Delete old file jika tidak null
-                if ($user->photo) Storage::delete($user->photo);
+                $validatedData['photo'] = $request->file('photo')->store('photo-profile', 'public');
+                if ($user->photo) {
+                    Storage::disk('public')->delete($user->photo);
+                }
             }
 
-            if ($request->new_password && trim($request->new_password) != "")
+            if (! empty($request->new_password) && trim($request->new_password) != '') {
                 $validatedData['password'] = Hash::make($request->new_password);
+            }
+            unset($validatedData['new_password']);
 
             $user->update($validatedData);
 
             return redirect()->back()->with('success', 'Berhasil mengubah data admin.');
         } catch (\Throwable $err) {
-            if ($validatedData['photo'] != '') Storage::delete($validatedData['photo']);
-            return back()->withInput()->with('error', $err->getMessage());
+            if (! empty($validatedData['photo'])) {
+                Storage::disk('public')->delete($validatedData['photo']);
+            }
+
+            return back()->withInput()->with('error', 'Gagal mengubah data admin: '.$err->getMessage());
         }
     }
 
@@ -126,14 +144,14 @@ class UserController extends Controller
     {
         try {
             if ($user->photo) {
-                Storage::delete($user->photo);
+                Storage::disk('public')->delete($user->photo);
             }
 
             $user->delete();
 
             return redirect()->back()->with('success', 'Berhasil menghapus data admin');
         } catch (\Throwable $err) {
-            return back()->with('error', $err->getMessage());
+            return back()->with('error', 'Gagal menghapus admin: '.$err->getMessage());
         }
     }
 
@@ -151,57 +169,60 @@ class UserController extends Controller
     public function storeStaff(Request $request)
     {
         $validatedData = $request->validate([
-            'nama' => 'required|string',
+            'nama' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8',
-            'nip' => 'required|string',
-            'jabatan' => 'required|string',
+            'password' => 'required|min:6',
+            'nip' => 'nullable|string|unique:users,nip',
+            'jabatan' => 'nullable|string|max:255',
         ], [
-            'nama.required' => 'Nama harus diisi.',
+            'nama.required' => 'Nama lengkap staf harus diisi.',
             'email.required' => 'Email harus diisi.',
             'email.email' => 'Masukkan email yang valid.',
+            'email.unique' => 'Email yang dimasukkan sudah terdaftar.',
             'password.required' => 'Password harus diisi.',
-            'password.min' => 'Password minimal 8 character.',
-            'nip.required' => 'NIP harus diisi.',
-            'jabatan.required' => 'Jabatan harus diisi.',
+            'password.min' => 'Password minimal 6 karakter.',
+            'nip.unique' => 'NIP sudah terdaftar untuk pengguna lain.',
         ]);
 
         try {
+            $validatedData['tipe'] = 'Staff';
             $validatedData['password'] = Hash::make($validatedData['password']);
             User::create($validatedData);
 
             return redirect()->back()->with('success', 'Berhasil menambahkan staff baru.');
         } catch (\Throwable $err) {
-            return back()->withInput()->with('error', $err->getMessage());
+            return back()->withInput()->with('error', 'Gagal menambahkan staff: '.$err->getMessage());
         }
     }
 
     public function updateStaff(Request $request, User $user)
     {
         $validatedData = $request->validate([
-            'nama' => 'required|string',
-            'email' => 'required|email',
-            'new_password' => 'nullable|min:8|exclude',
-            'nip' => 'required|string',
-            'jabatan' => 'required|string',
+            'nama' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,'.$user->id,
+            'new_password' => 'nullable|min:6',
+            'nip' => 'nullable|string|unique:users,nip,'.$user->id,
+            'jabatan' => 'nullable|string|max:255',
         ], [
-            'nama.required' => 'Nama harus diisi.',
+            'nama.required' => 'Nama lengkap staf harus diisi.',
             'email.required' => 'Email harus diisi.',
             'email.email' => 'Masukkan email yang valid.',
-            'new_password.min' => 'Password minimal 8 character.',
-            'nip.required' => 'NIP harus diisi.',
-            'jabatan.required' => 'Jabatan harus diisi.',
+            'email.unique' => 'Email sudah terdaftar untuk pengguna lain.',
+            'new_password.min' => 'Password minimal 6 karakter.',
+            'nip.unique' => 'NIP sudah terdaftar untuk pengguna lain.',
         ]);
 
         try {
-            if ($request->new_password && trim($request->new_password) != "")
+            if (! empty($request->new_password) && trim($request->new_password) != '') {
                 $validatedData['password'] = Hash::make($request->new_password);
+            }
+            unset($validatedData['new_password']);
 
             $user->update($validatedData);
 
             return redirect()->back()->with('success', 'Berhasil mengubah data staff.');
         } catch (\Throwable $err) {
-            return back()->withInput()->with('error', $err->getMessage());
+            return back()->withInput()->with('error', 'Gagal mengubah data staff: '.$err->getMessage());
         }
     }
 
@@ -212,7 +233,7 @@ class UserController extends Controller
 
             return redirect()->back()->with('success', 'Berhasil menghapus data staff');
         } catch (\Throwable $err) {
-            return back()->with('error', $err->getMessage());
+            return back()->with('error', 'Gagal menghapus data staff: '.$err->getMessage());
         }
     }
 }

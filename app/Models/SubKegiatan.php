@@ -10,5 +10,6 @@ class SubKegiatan extends Model
     // use HasFactory;
 
     protected $table = 'subkegiatan';
+
     public $guarded = ['id'];
 }

@@ -16,14 +16,21 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        if (!Auth::check()) return redirect()->route('login');
+        if (! Auth::check()) {
+            return redirect()->route('login');
+        }
 
         $role = Auth::user()->tipe;
         if (in_array($role, $roles)) {
             $bagian = $request->route('bagian');
-            if ($bagian && !in_array($role, ['Super Admin', 'Staff']) && $role != "Admin $bagian") {
-                return redirect()->route('dashboard')->with('error', 'Anda tidak memiliki akses ke menu tersebut.');
+            if ($bagian && ! in_array($role, ['Super Admin', 'Staff'])) {
+                $isDokinfo = in_array(strtolower($bagian), ['bagiandokinfo', 'dokinfo', 'a']);
+                $allowedRole = $isDokinfo ? 'Admin A' : 'Admin B';
+                if ($role !== $allowedRole && $role !== "Admin $bagian") {
+                    return redirect()->route('dashboard')->with('error', 'Anda tidak memiliki akses ke menu tersebut.');
+                }
             }
+
             return $next($request);
         }
 

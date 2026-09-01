@@ -14,59 +14,135 @@
     @endif
 
     <button type="button" data-bs-toggle="modal" data-bs-target="#addIndexKegiatanModal"
-        class="btn btn-warning btn-lg col-12">&plus; Index Kegiatan</button>
+        class="btn btn-warning w-100 shadow-sm py-2 px-3 fw-semibold d-flex align-items-center justify-content-center gap-2" style="border-radius: 10px;">
+        <i class="bx bx-plus-circle fs-5"></i> Tambah Index Kegiatan
+    </button>
 
-    <div class="card mt-4">
-        <div class="card-body">
-            <div class="table-responsive text-nowrap">
-                <table class="table">
-                    <thead>
+    <div class="card mt-3 shadow-sm border-0" style="border-radius: 12px;">
+        <div class="card-header border-bottom py-3 px-3 px-sm-4 d-flex align-items-center justify-content-between">
+            <h6 class="card-title mb-0 fw-bold d-flex align-items-center gap-2">
+                <i class="bx bx-folder text-primary fs-5"></i> Master Index Kegiatan
+            </h6>
+            <span class="badge bg-label-primary rounded-pill px-2 py-1">{{ $indexes->count() }} Index</span>
+        </div>
+        <div class="card-body p-2 p-sm-4">
+            <!-- Desktop Table View -->
+            <!-- Desktop Table View -->
+            <div class="d-none d-md-block table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
                         <tr>
-                            <th>No.</th>
-                            <th>Nomor Index</th>
-                            <th>Keterangan Index</th>
-                            <th>Action</th>
+                            <th style="width: 80px;">No.</th>
+                            <th style="min-width: 180px;">Nomor Index</th>
+                            <th style="min-width: 450px;">Keterangan Index Kegiatan</th>
+                            <th class="text-center" style="min-width: 140px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($indexes as $key => $index)
-                            <tr>
-                                <td>{{ ++$key }}</td>
-                                <td>{{ $index->kode }}</td>
-                                <td>{{ $index->keterangan }}</td>
+                            <tr class="table-row-action" style="cursor: pointer;"
+                                data-edit="#editIndexKegiatanModal-{{ $index->id }}"
+                                data-delete-action="{{ route('master.index-kegiatan.destroy', $index->id) }}"
+                                data-title="Index: {{ $index->kode }}"
+                                data-subtitle="{{ $index->keterangan }}">
+                                <td><span class="text-muted fw-semibold">{{ ++$key }}</span></td>
                                 <td>
-                                    <div class="dropdown">
-                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                            data-bs-toggle="dropdown">
-                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                    <span class="badge bg-label-primary font-monospace px-2 py-1" style="font-size: 0.82rem;">
+                                        Index {{ $index->kode }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="fw-semibold text-dark" style="font-size: 0.88rem; line-height: 1.4;">
+                                        {{ $index->keterangan }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex align-items-center justify-content-center gap-1" onclick="event.stopPropagation();">
+                                        <button type="button" class="btn btn-xs btn-outline-warning px-2 py-1"
+                                            href="#editIndexKegiatanModal-{{ $index->id }}" data-bs-toggle="modal" title="Edit">
+                                            <i class="bx bx-edit-alt me-1"></i>Edit
                                         </button>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" role="button"
-                                                href="#editIndexKegiatanModal-{{ $index->id }}" data-bs-toggle="modal">
-                                                <i class="bx bx-edit-alt me-1"></i>
-                                                Edit
-                                            </a>
-                                            <a class="dropdown-item text-danger btn-delete" role="button"
-                                                href="#deleteModal" data-bs-toggle="modal"
-                                                data-action="{{ route('master.index-kegiatan.destroy', $index->id) }}">
-                                                <i class="bx bx-trash me-1"></i>
-                                                Delete
-                                            </a>
-                                        </div>
+                                        <button type="button" class="btn btn-xs btn-outline-danger px-2 py-1 btn-delete"
+                                            href="#deleteModal" data-bs-toggle="modal"
+                                            data-action="{{ route('master.index-kegiatan.destroy', $index->id) }}" title="Hapus">
+                                            <i class="bx bx-trash me-1"></i>Hapus
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <th>No.</th>
-                            <th>Nomor Index</th>
-                            <th>Keterangan Index</th>
-                            <th>Action</th>
-                        </tr>
-                    </tfoot>
                 </table>
+            </div>
+
+            <!-- Mobile Card List View -->
+            <div class="d-md-none mobile-data-list">
+                @forelse ($indexes as $index)
+                    <div class="p-3 mb-2 bg-white rounded-3 border shadow-xs card-item-action"
+                        data-edit="#editIndexKegiatanModal-{{ $index->id }}"
+                        data-delete-action="{{ route('master.index-kegiatan.destroy', $index->id) }}"
+                        data-title="Index: {{ $index->kode }}"
+                        data-subtitle="{{ $index->keterangan }}"
+                        style="cursor: pointer;">
+                        <div class="d-flex align-items-start justify-content-between mb-1 gap-2">
+                            <div>
+                                <span class="badge bg-label-primary fw-semibold mb-1">Index {{ $index->kode }}</span>
+                                <div class="fw-bold text-dark fs-6">{{ $index->keterangan }}</div>
+                            </div>
+                            <button type="button" class="btn btn-xs btn-outline-secondary flex-shrink-0" title="Klik untuk opsi">
+                                <i class="bx bx-dots-vertical-rounded fs-5"></i>
+                            </button>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-end gap-2 pt-2 mt-2 border-top" onclick="event.stopPropagation();">
+                            <button type="button" class="btn btn-xs btn-outline-warning px-3 py-1 fw-medium d-flex align-items-center"
+                                href="#editIndexKegiatanModal-{{ $index->id }}" data-bs-toggle="modal">
+                                <i class="bx bx-edit-alt me-1"></i>Edit
+                            </button>
+                            <button type="button" class="btn btn-xs btn-outline-danger px-3 py-1 fw-medium d-flex align-items-center btn-delete"
+                                href="#deleteModal" data-bs-toggle="modal"
+                                data-action="{{ route('master.index-kegiatan.destroy', $index->id) }}">
+                                <i class="bx bx-trash me-1"></i>Hapus
+                            </button>
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-center py-4 text-muted">
+                        <i class="bx bx-info-circle fs-3 d-block mb-1"></i>
+                        Belum ada data index kegiatan.
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Action Modal (Pop-up Pilihan Aksi Data) -->
+    <div class="modal fade" id="quickActionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content shadow-lg border-0" style="border-radius: 14px;">
+                <div class="modal-header border-bottom py-3 px-3">
+                    <h6 class="modal-title mb-0 fw-bold d-flex align-items-center text-dark">
+                        <i class="bx bx-menu-alt-left fs-4 me-2 text-primary"></i>
+                        Pilihan & Aksi Data
+                    </h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-3">
+                    <div class="p-2 bg-lighter rounded border mb-3">
+                        <div class="fw-bold text-dark fs-6" id="qaTitle">-</div>
+                        <small class="text-muted d-block mt-1" id="qaSubtitle">-</small>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-warning d-flex align-items-center justify-content-center gap-2 py-2 fw-semibold" id="qaBtnEdit">
+                            <i class="bx bx-edit-alt fs-5"></i> Edit Index Kegiatan
+                        </button>
+                        <button type="button" class="btn btn-outline-danger d-flex align-items-center justify-content-center gap-2 py-2 fw-semibold" id="qaBtnDelete">
+                            <i class="bx bx-trash fs-5"></i> Hapus Index Kegiatan
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0 pb-3 px-3">
+                    <button type="button" class="btn btn-light w-100" data-bs-dismiss="modal">Tutup</button>
+                </div>
             </div>
         </div>
     </div>
@@ -75,7 +151,10 @@
     {{-- Tambah Index Kegiatam --}}
     <div class="modal fade" id="addIndexKegiatanModal" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
-            <form action="{{ route('master.index-kegiatan.store') }}" method="POST" class="modal-content">
+            <form action="{{ route('master.index-kegiatan.store') }}" method="POST" class="modal-content form-confirm"
+                data-confirm-title="Konfirmasi Tambah Index Kegiatan"
+                data-confirm-text="Apakah Anda yakin ingin menambahkan Index Kegiatan baru ini?"
+                data-confirm-btn="<i class='bx bx-plus-circle me-1'></i>Ya, Simpan">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalCenterTitle">Tambah Index Kegiatan</h5>
@@ -83,21 +162,21 @@
                 </div>
                 <div class="modal-body">
                     <div class="row mb-4">
-                        <label class="col-sm-2 col-md-3` col-form-label" for="kode">Nomor Index</label>
-                        <div class="col-sm-10 col-md-9">
-                            <input type="text" class="form-control" id="kode" name="kode" />
+                        <label class="col-sm-3 col-form-label" for="kode">Nomor Index <span class="text-danger">*</span></label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="kode" name="kode" placeholder="Contoh: 001" required />
                         </div>
                     </div>
                     <div class="row mb-4">
-                        <label class="col-sm-2 col-md-3` col-form-label" for="keterangan">Keterangan Index</label>
-                        <div class="col-sm-10 col-md-9">
-                            <input type="text" class="form-control" id="keterangan" name="keterangan" />
+                        <label class="col-sm-3 col-form-label" for="keterangan">Keterangan Index <span class="text-danger">*</span></label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="keterangan" name="keterangan" placeholder="Nama / Keterangan Index" required />
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                        Close
+                        Batal
                     </button>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
@@ -110,7 +189,10 @@
         <div class="modal fade" id="editIndexKegiatanModal-{{ $index->id }}" data-bs-backdrop="static" tabindex="-1"
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
-                <form action="{{ route('master.index-kegiatan.update', $index->id) }}" method="POST" class="modal-content">
+                <form action="{{ route('master.index-kegiatan.update', $index->id) }}" method="POST" class="modal-content form-confirm"
+                    data-confirm-title="Konfirmasi Simpan Perubahan"
+                    data-confirm-text="Apakah Anda yakin ingin menyimpan perubahan Index <strong>{{ $index->kode }}</strong>?"
+                    data-confirm-btn="<i class='bx bx-save me-1'></i>Ya, Simpan Perubahan">
                     @method('put')
                     @csrf
                     <div class="modal-header">
@@ -119,25 +201,25 @@
                     </div>
                     <div class="modal-body">
                         <div class="row mb-4">
-                            <label class="col-sm-2 col-md-3` col-form-label" for="kode">Nomor Index</label>
-                            <div class="col-sm-10 col-md-9">
-                                <input type="text" class="form-control" id="kode" name="kode"
-                                    value="{{ $index->kode }}" />
+                            <label class="col-sm-3 col-form-label" for="kode_{{ $index->id }}">Nomor Index</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="kode_{{ $index->id }}" name="kode"
+                                    value="{{ $index->kode }}" required />
                             </div>
                         </div>
                         <div class="row mb-4">
-                            <label class="col-sm-2 col-md-3` col-form-label" for="keterangan">Keterangan Index</label>
-                            <div class="col-sm-10 col-md-9">
-                                <input type="text" class="form-control" id="keterangan" name="keterangan"
-                                    value="{{ $index->keterangan }}" />
+                            <label class="col-sm-3 col-form-label" for="keterangan_{{ $index->id }}">Keterangan Index</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="keterangan_{{ $index->id }}" name="keterangan"
+                                    value="{{ $index->keterangan }}" required />
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                            Close
+                            Batal
                         </button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                     </div>
                 </form>
             </div>
@@ -150,20 +232,23 @@
             <form action="" method="POST" class="modal-content">
                 @method('delete')
                 @csrf
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalCenterTitle">Confirmasi Delete Index Kegiatan</h5>
-                    {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title d-flex align-items-center text-danger">
+                        <i class="bx bx-trash fs-4 me-2"></i>
+                        Konfirmasi Hapus Index Kegiatan
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <h5>Apakah Anda yakin ingin menghapus data Index Kegiatan?</h5>
-                    <p>Ini akan menghapus seluruh data pengajuan yang terkait.</p>
+                <div class="modal-body py-3">
+                    <p class="mb-2 fs-6 text-dark">Apakah Anda yakin ingin menghapus data Index Kegiatan ini?</p>
+                    <small class="text-danger"><i class="bx bx-error-circle me-1"></i>Tindakan ini akan menghapus seluruh data pengajuan yang terkait.</small>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer border-0 pt-0">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                        Tidak
+                        Batal
                     </button>
                     <button type="submit" class="btn btn-danger">
-                        Ya, Hapus
+                        <i class="bx bx-trash me-1"></i>Ya, Hapus
                     </button>
                 </div>
             </form>
@@ -174,10 +259,47 @@
 @push('page-js')
     <script>
         $(document).ready(function() {
-            $('.btn-delete').click(function() {
-                const actionUrl = $(this).data('action')
-                $('#deleteModal form').attr('action', actionUrl)
-            })
-        })
+            // Delete button click
+            $(document).on('click', '.btn-delete', function(e) {
+                e.stopPropagation();
+                const actionUrl = $(this).data('action');
+                $('#deleteModal form').attr('action', actionUrl);
+            });
+
+            // Quick Action Modal click handler for cards & table rows
+            $(document).on('click', '.card-item-action, .table-row-action', function(e) {
+                // Don't trigger if clicked on a button or link
+                if ($(e.target).closest('button, a, input').length) {
+                    return;
+                }
+
+                const editTarget = $(this).data('edit');
+                const deleteAction = $(this).data('delete-action');
+                const title = $(this).data('title');
+                const subtitle = $(this).data('subtitle');
+
+                $('#qaTitle').text(title);
+                $('#qaSubtitle').text(subtitle);
+
+                // Setup edit button
+                $('#qaBtnEdit').off('click').on('click', function() {
+                    $('#quickActionModal').modal('hide');
+                    setTimeout(() => {
+                        $(editTarget).modal('show');
+                    }, 350);
+                });
+
+                // Setup delete button
+                $('#qaBtnDelete').off('click').on('click', function() {
+                    $('#quickActionModal').modal('hide');
+                    $('#deleteModal form').attr('action', deleteAction);
+                    setTimeout(() => {
+                        $('#deleteModal').modal('show');
+                    }, 350);
+                });
+
+                $('#quickActionModal').modal('show');
+            });
+        });
     </script>
 @endpush

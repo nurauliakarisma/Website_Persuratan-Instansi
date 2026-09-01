@@ -14,6 +14,7 @@ abstract class Controller
                 $message = 'Terjadi kesalahan pada sistem.';
                 break;
         }
+
         return $message;
     }
 }
