@@ -14,28 +14,47 @@ class DashboardController extends Controller
     {
         $title = 'Dashboard';
 
-        $npds = AlokasiNPD::with([
-            'subKegiatan:id,kode_subkegiatan',
-            'rincianBelanja:id,kode_rekening',
-        ])
-            ->latest()
-            ->get();
+        $query = AlokasiNPD::with([
+            'subKegiatan',
+            'rincianBelanja',
+        ])->latest();
 
-        if (Auth::user()->tipe !== 'Super Admin') {
-            $bagian = explode(' ', Auth::user()->tipe)[1];
-            $npds = $npds->where('bagian', $bagian);
+        if (str_starts_with(Auth::user()->tipe, 'Admin ')) {
+            $parts = explode(' ', Auth::user()->tipe);
+            if (isset($parts[1])) {
+                $query->where('bagian', $parts[1]);
+            }
         }
 
-        $npds->loadSum(['pengajuan as realisasi' => function ($query) {
-            $query->where('status', 'Disetujui');
+        $npds = $query->get();
+
+        $npds->loadSum(['pengajuan as realisasi' => function ($q) {
+            $q->where('status', 'Disetujui');
         }], 'anggaran');
 
-        return view('home', compact('title', 'npds'));
+        $totalAnggaran = $npds->sum('total_anggaran');
+        $totalRealisasi = $npds->sum(function ($item) {
+            return $item->realisasi ?? 0;
+        });
+        $totalSisa = max(0, $totalAnggaran - $totalRealisasi);
+        $persenRealisasiTotal = $totalAnggaran > 0 ? round(($totalRealisasi / $totalAnggaran) * 100, 2) : 0;
+        $persenSisaTotal = $totalAnggaran > 0 ? round(($totalSisa / $totalAnggaran) * 100, 2) : 0;
+
+        return view('home', compact(
+            'title',
+            'npds',
+            'totalAnggaran',
+            'totalRealisasi',
+            'totalSisa',
+            'persenRealisasiTotal',
+            'persenSisaTotal'
+        ));
     }
 
     public function changePassword()
     {
         $title = 'Ubah Password';
+
         return view('change-password', compact('title'));
     }
 
@@ -45,7 +64,7 @@ class DashboardController extends Controller
             'new_password' => 'required|confirmed',
             'new_password_confirmation' => 'required',
         ], [
-            'new_password.confirmed' => 'Password baru dan Konfirmasi tidak sama.'
+            'new_password.confirmed' => 'Password baru dan Konfirmasi tidak sama.',
         ]);
 
         try {

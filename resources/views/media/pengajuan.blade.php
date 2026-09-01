@@ -87,12 +87,19 @@
                     <label class="col-sm-2 col-form-label" for="judul">Judul Publikasi</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control @error('judul') is-invalid @enderror" id="judul"
-                            name="judul" value="{{ old('judul') ?? '' }}" />
+                            name="judul" value="{{ old('judul') ?? '' }}" required />
                         @error('judul')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
                         @enderror
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <label class="col-sm-2 col-form-label" for="nama_penginput">Nama Pengaju</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="nama_penginput"
+                            name="nama_penginput" value="{{ auth()->user()->nama ?? 'Staff' }}" readonly />
                     </div>
                 </div>
                 <div class="mt-5 d-grid col">

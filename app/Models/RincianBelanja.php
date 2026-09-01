@@ -10,5 +10,6 @@ class RincianBelanja extends Model
     // use HasFactory;
 
     protected $table = 'rincian_belanja';
+
     public $guarded = ['id'];
 }

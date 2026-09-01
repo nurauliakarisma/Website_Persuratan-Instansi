@@ -11,10 +11,11 @@ class PengajuanNPD extends Model
     // use HasFactory;
 
     protected $table = 'pengajuan_npd';
+
     public $guarded = ['id'];
 
     public $with = [
-        'alokasi:id,bagian,subkegiatan_id,rincian_belanja_id',
+        'alokasi:id,bagian,subkegiatan_id,rincian_belanja_id,total_anggaran',
         'alokasi.subKegiatan:id,kode_subkegiatan',
         'alokasi.rincianBelanja:id,kode_rekening',
     ];

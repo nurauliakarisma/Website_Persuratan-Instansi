@@ -12,12 +12,10 @@ use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
 Route::get('/login', function () {
     return view('login', ['title' => 'Login']);
 })->name('login')->middleware('guest');
 Route::post('/login', [UserController::class, 'login'])->name('login.action')->middleware('guest');
-
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -28,8 +26,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::group(['prefix' => 'menu', 'as' => 'menu.'], function () {
         Route::get('/{bagian?}', function (Request $request, $bagian = null) {
-            $title = 'Pusat Persuratan DPRD Provinsi Jawa Timur';
+            $title = empty($bagian) ? '' : ($bagian === 'BagianDokinfo' ? 'Bagian Dokinfo' : 'Bagian FPP');
             $prev_url = $request->input('prev_url', null);
+
             return view('staff.menu', compact('title', 'prev_url', 'bagian'));
         })->name('index');
     });
@@ -37,6 +36,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('media', MediaController::class)->except(['edit', 'show']);
     Route::get('/media/detail', [MediaController::class, 'show'])->name('media.show');
     Route::post('/media/pengajuan', [MediaController::class, 'pengajuanStore'])->name('media.pengajuan.store');
+    Route::put('/media/pengajuan/{pengajuanPublikasi}/approve', [MediaController::class, 'approvePengajuan'])->name('media.pengajuan.approve');
+    Route::put('/media/pengajuan/{pengajuanPublikasi}/resubmit', [MediaController::class, 'resubmitPengajuan'])->name('media.pengajuan.resubmit');
     Route::get('/media/export', [ExportController::class, 'media'])->name('media.export');
 
     Route::group(['prefix' => 'users', 'as' => 'user.', 'middleware' => 'role:Super Admin'], function () {
@@ -67,6 +68,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/pengajuan/', [NPDController::class, 'createPengajuan'])->name('pengajuan');
         Route::post('/pengajuan/', [NPDController::class, 'storePengajuan'])->name('pengajuan.action');
         Route::put('/pengajuan/{pengajuanNPD}', [NPDController::class, 'updatePengajuan'])->name('pengajuan.approve');
+        Route::put('/pengajuan/{pengajuanNPD}/resubmit', [NPDController::class, 'resubmitPengajuan'])->name('pengajuan.resubmit');
         Route::get('/export', [ExportController::class, 'npd'])->name('export');
     });
 
@@ -76,6 +78,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/pengajuan', [NODINController::class, 'create'])->name('pengajuan');
         Route::post('/pengajuan', [NODINController::class, 'store'])->name('pengajuan.action');
         Route::put('/pengajuan/{pengajuanNODIN}', [NODINController::class, 'update'])->name('pengajuan.approve');
+        Route::put('/pengajuan/{pengajuanNODIN}/resubmit', [NODINController::class, 'resubmitPengajuan'])->name('pengajuan.resubmit');
         Route::get('/rekap', [NODINController::class, 'rekap'])->name('rekap');
         Route::get('/rekap-list', [NODINController::class, 'listRekap'])->name('rekap.list');
         Route::get('/export', [ExportController::class, 'nodin'])->name('export');

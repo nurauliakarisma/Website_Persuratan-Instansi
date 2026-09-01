@@ -14,7 +14,7 @@ class RincianBelanjaController extends Controller
     {
         $title = 'Rincian Kegiatan';
 
-        $rincians = RincianBelanja::latest()->get();
+        $rincians = RincianBelanja::orderBy('kode_rekening', 'asc')->get();
 
         return view('master.rincian_belanja', compact('title', 'rincians'));
     }
@@ -40,7 +40,7 @@ class RincianBelanjaController extends Controller
         try {
             RincianBelanja::create($validatedData);
 
-            return redirect()->route('master.rincian-belanja.index')->with('success', "Berhasil menambahkan data rincian belanja.");
+            return redirect()->route('master.rincian-belanja.index')->with('success', 'Berhasil menambahkan data rincian belanja.');
         } catch (\Throwable $err) {
             return back()->with('error', $this->errorMessage($err->getCode()));
         }
@@ -74,7 +74,7 @@ class RincianBelanjaController extends Controller
         try {
             $rincianBelanja->update($validatedData);
 
-            return redirect()->route('master.rincian-belanja.index')->with('success', "Berhasil mengubah data rincian belanja.");
+            return redirect()->route('master.rincian-belanja.index')->with('success', 'Berhasil mengubah data rincian belanja.');
         } catch (\Throwable $err) {
             return back()->with('error', $this->errorMessage($err->getCode()));
         }
