@@ -110,11 +110,6 @@
                                 <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
                             </div>
                         </form>
-
-                        <div class="text-center mt-3 pt-3 border-top">
-                            <small class="text-muted d-block">&copy; 2026 Sekretariat DPRD Provinsi Jawa Timur</small>
-                            <small class="text-muted d-block mt-1">Karya & Hak Cipta: <span class="fw-bold text-primary">Nur Aulia Karisma Dewi</span></small>
-                        </div>
                     </div>
                 </div>
                 <!-- /Register -->
