@@ -68,11 +68,27 @@
                     <!-- Content -->
                     <div class="container-xxl flex-grow-1 container-p-y">
                         @if ($prev_url)
-                            <a href="{{ $prev_url }}" class="d-flex align-items-center gap-2">
+                            <a href="{{ $prev_url }}" class="d-flex align-items-center gap-2 mb-3">
                                 <i class="bx bx-arrow-back"></i>
                                 <span>Kembali</span>
                             </a>
                         @endif
+
+                        @if (session('success'))
+                            <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+                                <i class="bx bx-check-circle me-1"></i>
+                                {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
+                        @if (session('error'))
+                            <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+                                <i class="bx bx-error me-1"></i>
+                                {{ session('error') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
+
                         @yield('content')
                     </div>
                     <!-- / Content -->
