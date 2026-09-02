@@ -126,7 +126,7 @@ Sistem telah dioptimalkan secara responsif (*Mobile-First*) sehingga pada layar 
 
 | Daftar Kartu NODIN Mobile | Kalender Agenda Mobile | Tracking Media Mobile |
 | :---: | :---: | :---: |
-| ![NODIN Mobile](docs/mobile_screenshots/mobile_nodin_view.png) | ![Kalender Mobile](docs/mobile_screenshots/mobile_rekap_nodin_calendar_grid.png) | ![Media Mobile](docs/mobile_screenshots/mobile_media_view.png) |
+| ![NODIN Mobile](docs/mobile_screenshots/mobile_nodin_view.png) | ![Kalender Mobile](docs/mobile_screenshots/mobile_rekap_nodin_final_layout.png) | ![Media Mobile](docs/mobile_screenshots/mobile_media_view.png) |
 
 ---
 
