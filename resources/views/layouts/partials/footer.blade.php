@@ -1,23 +1,15 @@
-<footer class="content-footer footer bg-footer-theme">
-    <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
-        <div class="mb-2 mb-md-0">
-            ©
-            <script>
-                document.write(new Date().getFullYear());
-            </script>
-            , made with ❤️ by
-            <a href="https://themeselection.com" target="_blank" class="footer-link fw-bolder">ThemeSelection</a>
+<footer class="content-footer footer bg-footer-theme border-top mt-auto">
+    <div class="container-xxl d-flex flex-wrap justify-content-between align-items-center py-3 flex-md-row flex-column gap-2">
+        <div class="mb-2 mb-md-0 text-muted small">
+            &copy; 2026 <span class="fw-semibold text-dark">Sekretariat DPRD Provinsi Jawa Timur</span> &bull; 
+            <span class="text-primary fw-semibold">Pusat Persuratan & Pengelolaan Anggaran</span>
         </div>
-        <div>
-            <a href="https://themeselection.com/license/" class="footer-link me-4" target="_blank">License</a>
-            <a href="https://themeselection.com/" target="_blank" class="footer-link me-4">More
-                Themes</a>
-
-            <a href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/" target="_blank"
-                class="footer-link me-4">Documentation</a>
-
-            <a href="https://github.com/themeselection/sneat-html-admin-template-free/issues" target="_blank"
-                class="footer-link me-4">Support</a>
+        <div class="d-flex align-items-center gap-2">
+            <span class="text-muted small">Karya Asli & Hak Cipta:</span>
+            <span class="footer-author-badge">
+                <i class="bx bxs-badge-check text-primary"></i> Nur Aulia Karisma Dewi
+            </span>
         </div>
     </div>
 </footer>
+
