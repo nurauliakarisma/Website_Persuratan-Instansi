@@ -12,6 +12,10 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        if (Auth::check() && Auth::user()->tipe === 'Staff') {
+            return redirect()->route('menu.index');
+        }
+
         $title = 'Dashboard';
 
         $query = AlokasiNPD::with([
@@ -51,11 +55,12 @@ class DashboardController extends Controller
         ));
     }
 
-    public function changePassword()
+    public function changePassword(Request $request)
     {
         $title = 'Ubah Password';
+        $prev_url = Auth::check() && Auth::user()->tipe === 'Staff' ? route('menu.index') : route('dashboard');
 
-        return view('change-password', compact('title'));
+        return view('change-password', compact('title', 'prev_url'));
     }
 
     public function changedPassword(Request $request)
@@ -71,7 +76,11 @@ class DashboardController extends Controller
             $newPassword = Hash::make($request->new_password);
             User::where('id', Auth::id())->update(['password' => $newPassword]);
 
-            return redirect()->route('dashboard')->with('success', 'Berhasil mengubah password');
+            if (Auth::check() && Auth::user()->tipe === 'Staff') {
+                return redirect()->route('menu.index')->with('success', 'Berhasil mengubah password.');
+            }
+
+            return redirect()->route('dashboard')->with('success', 'Berhasil mengubah password.');
         } catch (\Throwable $err) {
             return back()->with('error', $err->getMessage());
         }

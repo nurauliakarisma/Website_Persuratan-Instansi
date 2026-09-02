@@ -10,11 +10,14 @@
 
     <title>Login &mdash; Pusat Persuratan DPRD Prov. Jatim</title>
 
-    <meta name="description" content="" />
+    <meta name="description" content="Sistem Informasi Manajemen Persuratan & Pengelolaan Anggaran Sekretariat DPRD Provinsi Jawa Timur" />
+    <meta name="author" content="Nur Aulia Karisma Dewi" />
+    <meta name="copyright" content="© 2026 Nur Aulia Karisma Dewi. All rights reserved." />
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/avatars/logo.png') }}" />
     <link rel="shortcut icon" type="image/png" href="{{ asset('images/avatars/logo.png') }}" />
+
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -107,18 +110,17 @@
                                 <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
                             </div>
                         </form>
-
-                        {{-- <p class="text-center">
-                            <span>New on our platform?</span>
-                            <a href="auth-register-basic.html">
-                                <span>Create an account</span>
-                            </a>
-                        </p> --}}
                     </div>
                 </div>
                 <!-- /Register -->
             </div>
         </div>
+    </div>
+
+    <!-- System Watermark Badge -->
+    <div class="watermark-brand" title="Sistem Resmi - Karya & Hak Cipta Nur Aulia Karisma Dewi">
+        <i class="bx bxs-badge-check text-primary"></i>
+        <span>SIM-Persuratan &bull; Nur Aulia Karisma Dewi</span>
     </div>
 
     <!-- / Content -->
@@ -139,6 +141,18 @@
     <script src="{{ asset('dist/js/main.js') }}"></script>
 
     <!-- Page JS -->
+    <script>
+        // Developer Watermark & System Integrity Console Stamp
+        console.log(
+            "%c🏛️ SIM-PERSURATAN SEKRETARIAT DPRD PROV. JATIM %c\n\n" +
+            "🔒 Sistem Informasi Manajemen Persuratan & Pengelolaan Anggaran\n" +
+            "👤 Hak Cipta & Dikembangkan Oleh: Nur Aulia Karisma Dewi\n" +
+            "📅 Tahun Rilis: 2026 (Versi 2.0 Official)\n" +
+            "⚖️ Seluruh hak cipta dilindungi undang-undang. Dilarang keras menggandakan / mengkloning tanpa izin resmi.\n",
+            "background: #1E3A8A; color: #FFFFFF; font-size: 13px; font-weight: bold; padding: 6px 12px; border-radius: 4px;",
+            "color: #1E293B; font-size: 11px; font-family: monospace;"
+        );
+    </script>
 
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>

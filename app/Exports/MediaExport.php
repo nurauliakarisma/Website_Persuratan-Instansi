@@ -283,6 +283,22 @@ class MediaExport implements FromCollection, WithColumnFormatting, WithColumnWid
                     $sheet->setCellValue("E{$signRow}", $userNip);
                     $sheet->getStyle("E{$signRow}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
                 }
+
+                // -------------------------------------------------------------
+                // 6. SYSTEM WATERMARK & DOCUMENT PROPERTIES
+                // -------------------------------------------------------------
+                $sheet->getParent()->getProperties()
+                    ->setCreator('Nur Aulia Karisma Dewi')
+                    ->setLastModifiedBy('Nur Aulia Karisma Dewi')
+                    ->setTitle('Laporan Mitra Media - SIM Persuratan DPRD Jatim')
+                    ->setDescription('Sistem Informasi Manajemen Persuratan & Pengelolaan Anggaran Sekretariat DPRD Jawa Timur dikembangkan oleh Nur Aulia Karisma Dewi')
+                    ->setCompany('Sekretariat DPRD Provinsi Jawa Timur');
+
+                $footerRow = $signRow + 2;
+                $sheet->mergeCells("A{$footerRow}:F{$footerRow}");
+                $sheet->setCellValue("A{$footerRow}", 'Dokumen ini dibuat otomatis oleh Sistem Informasi Persuratan DPRD Jawa Timur • Hak Cipta © 2026 Nur Aulia Karisma Dewi');
+                $sheet->getStyle("A{$footerRow}")->getFont()->setSize(8)->setItalic(true)->getColor()->setRGB('94A3B8');
+                $sheet->getStyle("A{$footerRow}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
             },
         ];
     }

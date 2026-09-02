@@ -116,11 +116,22 @@ Pencatatan daftar media mitra, penawaran harga, nilai deal, dan kalkulasi PPN 11
 
 ---
 
-> 📖 **Dokumentasi Lengkap:**  
-> 👉 **[Buka Galeri Screenshot Desktop & Mobile (docs/SCREENSHOTS.md)](docs/SCREENSHOTS.md)**  
-> 👉 **[Buka Dokumen Formal UAT Format Word (docs/DOKUMEN_UAT_SISTEM_PERSURATAN_DPRD_JATIM.docx)](docs/DOKUMEN_UAT_SISTEM_PERSURATAN_DPRD_JATIM.docx)**
+## 📱 Galeri Tampilan Responsif Mobile Smartphone (Mobile View)
+
+Sistem telah dioptimalkan secara responsif (*Mobile-First*) sehingga pada layar smartphone ($390\text{px}$), tabel data otomatis beralih menjadi format kartu (*Card List View*) yang rapi, padat, dan nyaman dioperasikan dengan sentuhan jari:
+
+| Dashboard & Statistik Mobile | Menu Layanan Staf Mobile | Daftar Kartu NPD Mobile |
+| :---: | :---: | :---: |
+| ![Dashboard Mobile](docs/mobile_screenshots/mobile_02_dashboard.png) | ![Menu Staf Mobile](docs/mobile_screenshots/mobile_03_menu.png) | ![NPD Mobile](docs/mobile_screenshots/mobile_npd_view.png) |
+
+| Daftar Kartu NODIN Mobile | Kalender Agenda Mobile | Tracking Media Mobile |
+| :---: | :---: | :---: |
+| ![NODIN Mobile](docs/mobile_screenshots/mobile_nodin_view.png) | ![Kalender Mobile](docs/mobile_screenshots/mobile_rekap_nodin_calendar_grid.png) | ![Media Mobile](docs/mobile_screenshots/mobile_media_view.png) |
 
 ---
+
+> 📖 **Ingin melihat dokumentasi seluruh tampilan halaman lainnya?**  
+> 👉 **[Buka Galeri Screenshot Lengkap Desktop & Mobile (docs/SCREENSHOTS.md)](docs/SCREENSHOTS.md)**
 
 ## 🛠️ Teknologi & Dependensi Sistem
 

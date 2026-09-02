@@ -12,7 +12,9 @@
 
     <title>@yield('page-title', $title) &mdash; Pusat Persuratan DPRD Prov. Jatim</title>
 
-    <meta name="description" content="" />
+    <meta name="description" content="Sistem Informasi Manajemen Persuratan & Pengelolaan Anggaran Sekretariat DPRD Provinsi Jawa Timur" />
+    <meta name="author" content="Nur Aulia Karisma Dewi" />
+    <meta name="copyright" content="© 2026 Nur Aulia Karisma Dewi. All rights reserved." />
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/avatars/logo.png') }}" />
@@ -66,17 +68,33 @@
                     <!-- Content -->
                     <div class="container-xxl flex-grow-1 container-p-y">
                         @if ($prev_url)
-                            <a href="{{ $prev_url }}" class="d-flex align-items-center gap-2">
+                            <a href="{{ $prev_url }}" class="d-flex align-items-center gap-2 mb-3">
                                 <i class="bx bx-arrow-back"></i>
                                 <span>Kembali</span>
                             </a>
                         @endif
+
+                        @if (session('success'))
+                            <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+                                <i class="bx bx-check-circle me-1"></i>
+                                {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
+                        @if (session('error'))
+                            <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+                                <i class="bx bx-error me-1"></i>
+                                {{ session('error') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
+
                         @yield('content')
                     </div>
                     <!-- / Content -->
 
                     <!-- Footer -->
-                    {{-- @include('layouts.partials.footer') --}}
+                    @include('layouts.partials.footer')
                     <!-- / Footer -->
 
                     <div class="content-backdrop fade"></div>
@@ -84,6 +102,12 @@
                 <!-- Content wrapper -->
             </div>
             <!-- / Layout page -->
+        </div>
+
+        <!-- System Watermark Badge -->
+        <div class="watermark-brand" title="Sistem Resmi - Karya & Hak Cipta Nur Aulia Karisma Dewi">
+            <i class="bx bxs-badge-check text-primary"></i>
+            <span>SIM-Persuratan &bull; Nur Aulia Karisma Dewi</span>
         </div>
 
         <!-- Overlay -->
@@ -294,6 +318,17 @@
                     $icon.removeClass('bx-show').addClass('bx-hide');
                 }
             });
+
+            // Developer Watermark & System Integrity Console Stamp
+            console.log(
+                "%c🏛️ SIM-PERSURATAN SEKRETARIAT DPRD PROV. JATIM %c\n\n" +
+                "🔒 Sistem Informasi Manajemen Persuratan & Pengelolaan Anggaran\n" +
+                "👤 Hak Cipta & Dikembangkan Oleh: Nur Aulia Karisma Dewi\n" +
+                "📅 Tahun Rilis: 2026 (Versi 2.0 Official)\n" +
+                "⚖️ Seluruh hak cipta dilindungi undang-undang. Dilarang keras menggandakan / mengkloning tanpa izin resmi.\n",
+                "background: #1E3A8A; color: #FFFFFF; font-size: 13px; font-weight: bold; padding: 6px 12px; border-radius: 4px;",
+                "color: #1E293B; font-size: 11px; font-family: monospace;"
+            );
         });
     </script>
     @stack('page-js')
